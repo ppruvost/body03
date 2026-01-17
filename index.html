@@ -1,123 +1,258 @@
-
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta charset="utf-8">
-        <title>Body Browser</title>
-        <meta name="description" content="The Digital Human is a virtual 3D body that brings to life thousands of medically accurate anatomy objects and health conditions in an interactive Web-based platform" >
-        <meta name="keywords" content="Digital Human, Explore the Body in 3D, virtual 3D body, learning anatomy, anatomy education, anatomy textbooks, health visualization, 3D anatomy, interactive anatomy, online anatomy, anatomy apps" >              
-        <meta content="text/html; charset=UTF-8" http-equiv="Content-type">
-        <meta name="Publisher" content="Digital Human" >
-        <meta name="Copyright" content="2015" >
-        <meta name="Author"content="Digital Human" >
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style type="text/css">
-		
-			body {
-				margin:0;
-				padding:0;
-				font-family: Sans-Serif;
-				line-height: 1.5em;
-			}
-			
-			header {
-				background: #FF3333;
-				height: 100px;
-				color: white;
-			}
-			
-			header h1 {
-				margin: 0;
-				padding-top: 15px;
-			}
-			
-			main {
-				padding-bottom: 10010px;
-				margin-bottom: -10000px;
-				float: left;
-				width: 100%;
-			}
-			
-			nav {
-				padding-bottom: 10010px;
-				margin-bottom: -10000px;
-				float: left;
-				width: 230px;
-				margin-left: -230px;
-				background: #eee;
-			}
-			
-			footer {
-				clear: left;
-				width: 100%;
-				background: #ccc;
-				text-align: center;
-				padding: 4px 0;
-			}
-	
-			#wrapper {
-				overflow: hidden;
-			}
-						
-			#content {
-				margin-right: 230px; /* Same as 'nav' width */
-			}
-			
-			.innertube {
-				margin: 15px; /* Padding for content */
-				margin-top: 0;
-			}
-		
-			p {
-				color: #555;
-			}
-	
-			nav ul {
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			
-			nav ul a {
-				color: darkgreen;
-				text-decoration: none;
-			}
-		
-		</style>
-		
-		
-	</head>
-	
-	<body>		
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta charset="utf-8">
+        <title>Body Browser - Points d'Acupression</title>
+        <meta name="description" content="Visualisation interactive des points d'acupression pour analyse par radiesthésie.">
+        <meta name="keywords" content="acupression, radiesthésie, pendule, points énergétiques, corps humain 3D">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <style type="text/css">
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: Sans-Serif;
+                line-height: 1.5em;
+                overflow: hidden;
+            }
 
-		<header>
-			<div class="innertube">
-				<h1>Body Browser</h1>
-			</div>
-		</header>
-		<div id="wrapper">
-			<main>
-				<div id="content">
-					<div class="innertube">
-						<h1></h1>
-						<div id="container"></div>	
-					</div>
-				</div>
-			</main>
-		</div>
-		
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-		<script src="build/three.min.js"></script>
-		<script src="js/UCSCharacter.js"></script>
-		<script src='js/libs/dat.gui.min.js'></script>		
-		<script src="js/controls/OrbitControls.js"></script>
-		<script src="js/script.js">	
-		</script>	
-		<footer>
-			<div class="innertube">
-				<p>Footer...</p>
-			</div>
-		</footer>
-	
-	</body>
+            header {
+                background: #FF3333;
+                height: 100px;
+                color: white;
+                position: relative;
+            }
+
+            header h1 {
+                margin: 0;
+                padding-top: 15px;
+                text-align: center;
+            }
+
+            #wrapper {
+                position: absolute;
+                top: 100px;
+                bottom: 0;
+                width: 100%;
+            }
+
+            #content {
+                height: 100%;
+                width: 100%;
+            }
+
+            #container {
+                width: 100%;
+                height: 100%;
+            }
+
+            #acupressure-controls {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(255, 255, 255, 0.8);
+                padding: 10px;
+                border-radius: 5px;
+                z-index: 100;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            }
+
+            #acupressure-controls h3 {
+                margin-top: 0;
+                color: #333;
+            }
+
+            button, select {
+                margin: 5px 0;
+                padding: 5px;
+            }
+
+            footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                background: #ccc;
+                text-align: center;
+                padding: 4px 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header>
+            <h1>Body Browser - Points d'Acupression</h1>
+        </header>
+
+        <div id="wrapper">
+            <div id="content">
+                <div id="container"></div>
+            </div>
+        </div>
+
+        <!-- Panneau de contrôle pour les points d'acupression -->
+        <div id="acupressure-controls">
+            <h3>Contrôle des Points</h3>
+            <button id="toggle-points">Afficher/Masquer les Points</button>
+            <div>
+                <label>État : </label>
+                <select id="status-select">
+                    <option value="free">Libre</option>
+                    <option value="blocked">Bloqué</option>
+                </select>
+            </div>
+            <div id="analysis-result" style="margin-top: 10px; font-weight: bold;">
+                Points bloqués : 0/0
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 - Analyse par radiesthésie et visualisation 3D</p>
+        </footer>
+
+        <!-- Bibliothèques nécessaires -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+
+        <!-- Script principal -->
+        <script>
+            // Variables globales
+            let scene, camera, renderer, controls;
+            let showPoints = true;
+            const acupressurePoints = [
+                { name: "Point 1", position: { x: 0.5, y: 1.2, z: 0 }, status: "unknown" },
+                { name: "Point 2", position: { x: -0.3, y: 0.8, z: 0.2 }, status: "unknown" },
+                { name: "Point 3", position: { x: 0.2, y: 0.5, z: -0.3 }, status: "unknown" },
+                { name: "Point 4", position: { x: -0.4, y: 1.0, z: 0.1 }, status: "unknown" },
+                { name: "Point 5", position: { x: 0.1, y: 1.5, z: -0.2 }, status: "unknown" },
+            ];
+
+            // Initialisation de la scène Three.js
+            function init() {
+                // Création de la scène
+                scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xf0f0f0);
+
+                // Création de la caméra
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 5;
+
+                // Création du renderer
+                renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.getElementById('container').appendChild(renderer.domElement);
+
+                // Ajout des contrôles orbitaux
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+                // Ajout d'une lumière
+                const light = new THREE.PointLight(0xffffff, 1, 100);
+                light.position.set(5, 5, 5);
+                scene.add(light);
+
+                // Ajout d'un modèle 3D simple (remplacez par votre modèle)
+                const geometry = new THREE.BoxGeometry(2, 3, 1);
+                const material = new THREE.MeshBasicMaterial({ color: 0x00aaff, transparent: true, opacity: 0.5 });
+                const body = new THREE.Mesh(geometry, material);
+                scene.add(body);
+
+                // Création des points d'acupression
+                createAcupressurePoints();
+
+                // Gestion du redimensionnement
+                window.addEventListener('resize', onWindowResize);
+
+                // Lancement de l'animation
+                animate();
+            }
+
+            // Création des points d'acupression
+            function createAcupressurePoints() {
+                acupressurePoints.forEach((point, index) => {
+                    const geometry = new THREE.SphereGeometry(0.05, 16, 16);
+                    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                    const sphere = new THREE.Mesh(geometry, material);
+                    sphere.position.set(point.position.x, point.position.y, point.position.z);
+                    sphere.userData = { index: index, status: point.status };
+                    sphere.name = `acupressure-point-${index}`;
+                    scene.add(sphere);
+
+                    // Gestion du clic
+                    sphere.userData.clickable = true;
+                });
+
+                // Mise à jour de l'affichage
+                updatePointsVisibility();
+                updateAnalysisResult();
+
+                // Écouteur pour le bouton Afficher/Masquer
+                document.getElementById('toggle-points').addEventListener('click', () => {
+                    showPoints = !showPoints;
+                    updatePointsVisibility();
+                });
+
+                // Écouteur pour le rayonnement des points
+                renderer.domElement.addEventListener('click', onDocumentMouseClick, false);
+            }
+
+            // Gestion du clic sur les points
+            function onDocumentMouseClick(event) {
+                event.preventDefault();
+
+                // Calcul de la position de la souris en coordonnées normalisées
+                const mouse = new THREE.Vector2();
+                mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+                mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+
+                // Raycasting pour détecter les points cliqués
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(mouse, camera);
+
+                const intersects = raycaster.intersectObjects(scene.children, true);
+
+                if (intersects.length > 0) {
+                    const object = intersects[0].object;
+                    if (object.userData.clickable) {
+                        const status = document.getElementById('status-select').value;
+                        const index = object.userData.index;
+                        acupressurePoints[index].status = status;
+                        object.material.color.set(status === 'free' ? 0x00ff00 : 0xff0000);
+                        updateAnalysisResult();
+                    }
+                }
+            }
+
+            // Mise à jour de la visibilité des points
+            function updatePointsVisibility() {
+                acupressurePoints.forEach((_, index) => {
+                    const point = scene.getObjectByName(`acupressure-point-${index}`);
+                    if (point) point.visible = showPoints;
+                });
+            }
+
+            // Mise à jour du résultat de l'analyse
+            function updateAnalysisResult() {
+                const blockedPoints = acupressurePoints.filter(p => p.status === 'blocked');
+                document.getElementById('analysis-result').textContent =
+                    `Points bloqués : ${blockedPoints.length}/${acupressurePoints.length}`;
+            }
+
+            // Gestion du redimensionnement de la fenêtre
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            // Animation
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+
+            // Lancement de l'application
+            init();
+        </script>
+    </body>
 </html>
